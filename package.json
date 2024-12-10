@@ -1,0 +1,20 @@
+{
+  "name": "ai-tools",
+  "version": "1.0.0",
+  "description": "Small helpers for coding ai related things.",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "bun run test",
+    "start": "bun run src/index.ts"
+  },
+  "keywords": [
+    "ai",
+    "tools",
+    "typescript"
+  ],
+  "author": "Tim Susa",
+  "license": "ISC",
+  "dependencies": {
+    "bun": "^1.1.38"
+  }
+}
