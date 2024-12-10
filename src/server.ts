@@ -42,7 +42,8 @@ app.post("/upload", (req: UploadRequest, res: Response): void => {
   }
 });
 
-// Startet den Server
-app.listen(PORT, () => {
-  console.log(`Server läuft auf http://localhost:${PORT}`);
-});
+export function startServer() {
+  return app.listen(PORT, () => {
+    console.log(`Server läuft auf http://localhost:${process.env.PORT}`);
+  });
+}
