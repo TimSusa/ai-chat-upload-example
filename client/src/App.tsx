@@ -1,11 +1,11 @@
 import './App.css'
-import Client from './client'
+import { PdfUploaderWithQuestion } from './client'
 
 function App() {
 
   return (
     <>
-      <Client>  </Client>
+      <PdfUploaderWithQuestion />
     </>
   )
 }

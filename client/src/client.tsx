@@ -60,4 +60,3 @@ export const PdfUploaderWithQuestion = () => {
   );
 };
 
-export default PdfUploaderWithQuestion;

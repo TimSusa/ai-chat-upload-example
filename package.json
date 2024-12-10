@@ -5,7 +5,8 @@
   "main": "src/index.ts",
   "scripts": {
     "test": "bun run test",
-    "start": "bun run src/index.ts"
+    "start:server": "bun run src/index.ts",
+    "start:client": "cd client && bun run dev"
   },
   "keywords": [
     "ai",
@@ -19,6 +20,8 @@
     "body-parser": "^1.20.3",
     "bun": "^1.1.38",
     "express": "^4.21.2",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   }
