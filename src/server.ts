@@ -1,46 +1,62 @@
-/// npm install express body-parser @types/express typescript ts-node
-
 import express, { Request, Response } from "express";
 import fs from "fs";
 import path from "path";
+import cors from "cors";
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-// Middleware: Verarbeitet Rohdaten mit dem MIME-Type "application/pdf"
-app.use(express.raw({ type: "application/pdf", limit: "10mb" }));
+const corsOptions = {
+  origin: ["http://localhost:8080", /\.teamitgroup\.fi$/],
+  optionsSuccessStatus: 200,
+};
 
-// Typen für den Endpunkt
-interface UploadRequest extends Request {
-  body: Buffer; // Rohdaten des PDF als Buffer
+// Middleware: Processes raw data with the MIME-Type "application/json"
+app.use(express.json({ limit: "10mb" }));
+app.options(`/upload`, cors(corsOptions));
+// Types for the endpoint
+interface PdfUploadRequest extends Request {
+  body: {
+    question: string;
+    file: Buffer; // Buffer type for the file
+  };
 }
 
-// Upload-Endpunkt
-app.post("/upload", (req: UploadRequest, res: Response): void => {
-  try {
-    const pdfBuffer: Buffer = req.body; // Binäre Daten des hochgeladenen PDFs
-    if (!pdfBuffer || pdfBuffer.length === 0) {
-      res.status(400).send("Keine Datei hochgeladen.");
-      return;
-    }
-
-    // Speicherpfad für die hochgeladene Datei
-    const uploadPath: string = path.join(
-      __dirname,
-      "../uploads",
-      `upload-${Date.now()}.pdf`
-    );
-
-    // Speichert die Datei lokal
-    fs.writeFileSync(uploadPath, pdfBuffer);
-
-    console.log(`Datei erfolgreich gespeichert: ${uploadPath}`);
-    res.status(200).send("PDF erfolgreich hochgeladen!");
-  } catch (error) {
-    console.error("Fehler beim Verarbeiten der Datei:", error);
-    res.status(500).send("Fehler beim Hochladen der Datei.");
-  }
+app.get("/", (req: Request, res: Response) => {
+  res.send("Hello World!");
 });
+
+// Upload endpoint
+app.post(
+  "/upload",
+  cors(corsOptions),
+  (req: PdfUploadRequest, res: Response): void => {
+    console.log("Upload endpoint called");
+    try {
+      const { question, file } = req.body;
+      if (!file || file.length === 0) {
+        res.status(400).send("No file uploaded.");
+        return;
+      }
+
+      const pdfBuffer: Buffer = Buffer.from(file); // Convert to Buffer if necessary
+      console.log("Question:", question);
+      console.log("PDF Buffer:", pdfBuffer);
+
+      // Speicherpfad für die hochgeladene Datei
+      const uploadPath: string = path.join(
+        __dirname,
+        "../uploads",
+        `upload-${Date.now()}.pdf`
+      );
+      fs.writeFileSync(uploadPath, pdfBuffer);
+      res.status(200).send("File uploaded successfully.");
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      res.status(500).send("Internal Server Error.");
+    }
+  }
+);
 
 export function startServer() {
   return app.listen(PORT, () => {

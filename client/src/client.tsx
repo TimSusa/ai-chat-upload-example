@@ -26,7 +26,7 @@ export const PdfUploaderWithQuestion = () => {
       const arrayBuffer = await file.arrayBuffer();
 
       const response = await axios.post(
-        `http://localhost:${process.env.PORT}/updateAndQuestion`,
+        `http://localhost:${3001}/upload`,
         {
           question: question,
           file: Array.from(new Uint8Array(arrayBuffer)), // Konvertiert Buffer in JSON-kompatibles Format
