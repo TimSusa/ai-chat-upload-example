@@ -3,11 +3,11 @@
 A collection of tools.
 
 ## Features
-- 🛠 **Server Sent Events**: SSE Server
-
+- **PDF Uploader**: From Client to Server
+- 🛠 **Server Sent Events**: SSE Server, sends back an answer
 
 ## Prerequisites
-- **buns**: Ensure bun is installed.
+- **bun**: Ensure bun is installed.
 
 ## Installation Dependencies
 
@@ -20,31 +20,31 @@ cd client && bun i && cd ..
 
 ```typescript
 (async () => {
-    // Erstellen eines Event-Managers mit In-Memory-Adapter
+    // Creating an Event Manager with In-Memory Adapter
     const manager = new StateEventManager();
 
-    // Event senden
+    // Send events
     manager.emit('userLogin', { username: 'JohnDoe', time: Date.now() });
     manager.emit('errorLog', ['Error 404', 'Error 500']);
     manager.emit('appStatus', 'running');
     manager.emit('counter', 42);
 
-    // Auf Events hören
+    // Listen for events
     manager.on('userLogin', (payload) => {
-        console.log('Benutzer eingeloggt:', payload);
+        console.log('User logged in:', payload);
     });
 
     manager.on('appStatus', (payload) => {
-        console.log('Anwendungsstatus:', payload);
+        console.log('Application status:', payload);
     });
 
-    // Aktuellen State speichern
+    // Save current state
     await manager.saveState();
 
-    // Gesamten State abrufen
-    console.log('Gesamter State:', manager.getState());
+    // Retrieve entire state
+    console.log('Entire State:', manager.getState());
 
-    // State laden
+    // Load state
     await manager.loadState();
 })();
 ```
@@ -57,21 +57,21 @@ cd client && bun i && cd ..
   const sqliteAdapter = new SQLiteAdapter("./state.db");
   const manager = new StateEventManager(sqliteAdapter);
 
-  // Event senden
+  // Send events
   manager.emit("userLogin", { username: "JaneDoe", time: Date.now() });
   manager.emit("appStatus", "stopped");
 
-  // State speichern und laden
+  // Save and load state
   await manager.saveState();
   await manager.loadState();
-  console.log("Geladener State:", manager.getState());
+  console.log("Loaded State:", manager.getState());
 })();
 ```
 
 ### Usage Immutable State Event Proxy Manager
 
 ```typescript
-// Beispiel
+// Example
 const immutableState = new ImmutableStateManager({ theme: 'light', user: null });
 
 immutableState.on('stateChanged', ({ oldState, newState }) => {
@@ -79,11 +79,11 @@ immutableState.on('stateChanged', ({ oldState, newState }) => {
 });
 
 immutableState.setState({ theme: 'dark' });
-console.log(immutableState.getState().theme); // Gibt 'dark' zurück
+console.log(immutableState.getState().theme); // Returns 'dark'
 
-// Direkter Versuch, den Zustand zu ändern, schlägt fehl
+// Direct attempt to change the state fails
 try {
-  immutableState.getState().theme = 'light'; // Fehler: State is immutable
+  immutableState.getState().theme = 'light'; // Error: State is immutable
 } catch (e) {
   console.error(e.message);
 }
@@ -104,5 +104,3 @@ bun start:client
 This project is licensed under the ISC License. See the LICENSE file for details.
 
 ---
-
-
