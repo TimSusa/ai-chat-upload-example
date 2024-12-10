@@ -13,13 +13,16 @@ export const setupSSE = (app: Application, corsOptions) => {
       Connection: "keep-alive",
     });
 
-    // Dummy event for client registration
-    res.write("event: hello-client\n");
-    res.write('data: {"message": "Hello, client!"}\n\n');
+    const data = { message: "Hello from SSE!", timestamp: new Date() };
+    res.write(`data: ${JSON.stringify(data)}\n\n`);
 
     // Keep the connection open
     const intervalId = setInterval(() => {
-      res.write("data: {}\n\n");
+      const data = {
+        message: "Hello from111111212 SSE!",
+        timestamp: new Date(),
+      };
+      res.write(`data: ${JSON.stringify(data)}\n\n`);
     }, 30000);
 
     // Clean up when the connection is closed

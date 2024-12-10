@@ -5,8 +5,13 @@ interface SSEClientProps {
   title?: string; // Optional title for the message list
 }
 
+type SSEData = {
+  message: string;
+  timestamp: string
+};
+
 const SSEClient: React.FC<SSEClientProps> = ({ url, title = "Server-Sent Events" }) => {
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<SSEData[]>([]);
 
   useEffect(() => {
     // Create a new EventSource instance
@@ -14,7 +19,7 @@ const SSEClient: React.FC<SSEClientProps> = ({ url, title = "Server-Sent Events"
 
     // Listen for incoming messages
     eventSource.onmessage = (event) => {
-      const newMessage = event.data;
+      const newMessage: SSEData = JSON.parse(event.data);
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     };
 
@@ -34,11 +39,11 @@ const SSEClient: React.FC<SSEClientProps> = ({ url, title = "Server-Sent Events"
     <div style={{ padding: "20px", fontFamily: "Arial" }}>
       <h2>{title}</h2>
       <ul>
-        {messages.map((message, index) => {
-          const parsedMessage = JSON.parse(message); // Assuming JSON format from server
+        {messages.map((data, index) => {
+          const { message, timestamp } = data || { message: "", timestamp: "" };
           return (
             <li key={index}>
-              <strong>Message:</strong> {parsedMessage.message}, <strong>Time:</strong> {parsedMessage.timestamp}
+              <strong>Message:</strong> {message}, <strong>Time:</strong> {timestamp}
             </li>
           );
         })}
