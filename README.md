@@ -1,4 +1,4 @@
-# AI Too-lBelt
+# AI Tool-Belt
 
 A collection of tools.
 
