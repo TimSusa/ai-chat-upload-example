@@ -18,7 +18,7 @@ export const PdfUploaderWithQuestion = () => {
 
   const handleUpload = async () => {
     if (!file || !question) {
-      setUploadStatus("Bitte wähle eine PDF-Datei aus und gib eine Frage ein.");
+      setUploadStatus("Please select a PDF file and enter a question.");
       return;
     }
 
@@ -29,34 +29,33 @@ export const PdfUploaderWithQuestion = () => {
         `http://localhost:${3001}/upload`,
         {
           question: question,
-          file: Array.from(new Uint8Array(arrayBuffer)), // Konvertiert Buffer in JSON-kompatibles Format
+          file: Array.from(new Uint8Array(arrayBuffer)), // Converts Buffer to JSON-compatible format
         }
       );
 
       if (response.status === 200) {
-        setUploadStatus("Datei und Frage erfolgreich hochgeladen!");
+        setUploadStatus("File and question uploaded successfully!");
       } else {
-        setUploadStatus("Fehler beim Upload.");
+        setUploadStatus("Error during upload.");
       }
     } catch (error) {
-      console.error("Upload-Fehler:", error);
-      setUploadStatus("Fehler beim Upload.");
+      console.error("Upload error:", error);
+      setUploadStatus("Error during upload.");
     }
   };
 
   return (
     <div>
-      <h1>PDF-Upload mit Frage</h1>
+      <h1>PDF Upload with Question</h1>
       <input type="file" accept="application/pdf" onChange={handleFileChange} />
       <input
         type="text"
-        placeholder="Deine Frage eingeben"
+        placeholder="Enter your question"
         value={question}
         onChange={handleQuestionChange}
       />
-      <button onClick={handleUpload}>Upload mit Frage</button>
+      <button onClick={handleUpload}>Upload with Question</button>
       <p>{uploadStatus}</p>
     </div>
   );
 };
-

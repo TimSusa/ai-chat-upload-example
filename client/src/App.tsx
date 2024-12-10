@@ -1,5 +1,5 @@
 import './App.css'
-import { PdfUploaderWithQuestion } from './client'
+import { PdfUploaderWithQuestion } from './PdfUploaderWithQuestion'
 
 function App() {
 

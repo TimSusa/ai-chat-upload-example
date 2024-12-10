@@ -41,7 +41,6 @@ app.post(
 
       const pdfBuffer: Buffer = Buffer.from(file); // Convert to Buffer if necessary
       console.log("Question:", question);
-      console.log("PDF Buffer:", pdfBuffer);
 
       // Speicherpfad für die hochgeladene Datei
       const uploadPath: string = path.join(

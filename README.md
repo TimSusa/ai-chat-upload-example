@@ -13,7 +13,9 @@ A collection of tools.
 
 ```bash
 bun i
-cd client && bun i && cd ..
+cd client
+bun i
+cd ..
 ```
 
 ### **Usage of the State Event Manager**
