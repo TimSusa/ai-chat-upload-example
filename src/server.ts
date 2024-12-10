@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import fs from "fs";
 import path from "path";
 import cors from "cors";
+import { setupSSE } from "./sse";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,6 +15,7 @@ const corsOptions = {
 // Middleware: Processes raw data with the MIME-Type "application/json"
 app.use(express.json({ limit: "10mb" }));
 app.options(`/upload`, cors(corsOptions));
+
 // Types for the endpoint
 interface PdfUploadRequest extends Request {
   body: {
@@ -56,7 +58,7 @@ app.post(
     }
   }
 );
-
+setupSSE(app, corsOptions);
 export function startServer() {
   return app.listen(PORT, () => {
     console.log(`Server läuft auf http://localhost:${process.env.PORT}`);
