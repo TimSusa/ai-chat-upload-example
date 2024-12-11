@@ -23,6 +23,16 @@ const SSEClient: React.FC<SSEClientProps> = ({ url, title = "Server-Sent Events"
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     };
 
+    eventSource.addEventListener("tick", ({ data }) => {
+      console.log(`The clock has ticked! The count is now ${data}.`);
+    });
+
+    eventSource.addEventListener("session-count", ({ data }) => {
+      console.log(`There are ${data} person(s) watching this pointless number.`);
+    });
+
+
+
     // Handle connection errors
     eventSource.onerror = (error) => {
       console.error("EventSource error:", error);
