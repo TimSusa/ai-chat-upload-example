@@ -1,5 +1,5 @@
 import { createChannel } from "better-sse";
-import { CustomEvent } from "./custom-event";
+import { CustomEvent } from "../../client/src/custom-event";
 
 /**
  * Create a channel that allows you to broadcast messages
@@ -14,7 +14,7 @@ let count = 0;
 
 setInterval(() => {
   ticker.broadcast(count++, CustomEvent.TICKER);
-}, 1000);
+}, 10000);
 
 /**
  * Keep track of how many clients are subscribed to the channel, and

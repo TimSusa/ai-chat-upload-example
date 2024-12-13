@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { CustomEvent } from "./custom-event";
 
 interface SSEClientProps {
   url: string; // URL of the SSE endpoint
@@ -7,15 +8,23 @@ interface SSEClientProps {
 
 type SSEData = {
   message: string;
-  timestamp: string
+  timestamp: string;
 };
 
-const SSEClient: React.FC<SSEClientProps> = ({ url, title = "Server-Sent Events" }) => {
+const SSEClient: React.FC<SSEClientProps> = ({
+  url,
+  title = "Server-Sent Events",
+}) => {
   const [messages, setMessages] = useState<SSEData[]>([]);
+  const localUserId = localStorage.getItem(CustomEvent.USER_ID) || "";
+  const [userId, setUserId] = useState<string>("");
 
   useEffect(() => {
     // Create a new EventSource instance
-    const eventSource = new EventSource(url);
+    console.log(`${url}?userId=${userId}`);
+    const eventSource = new EventSource(
+      localUserId.length > 0 ? `${url}?userId=${localUserId}` : new URL(url),
+    );
 
     // Listen for incoming messages
     eventSource.onmessage = (event) => {
@@ -23,15 +32,25 @@ const SSEClient: React.FC<SSEClientProps> = ({ url, title = "Server-Sent Events"
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     };
 
-    eventSource.addEventListener("tick", ({ data }) => {
+    eventSource.addEventListener(CustomEvent.TICKER, ({ data }) => {
       console.log(`The clock has ticked! The count is now ${data}.`);
     });
 
-    eventSource.addEventListener("session-count", ({ data }) => {
-      console.log(`There are ${data} person(s) watching this pointless number.`);
+    eventSource.addEventListener(CustomEvent.SESSION_COUNT, ({ data }) => {
+      console.log(
+        `There are ${data} person(s) watching this pointless number.`,
+      );
     });
 
-
+    eventSource.addEventListener(CustomEvent.USER_ID, ({ data }) => {
+      const tmpUserId = JSON.parse(data);
+      setUserId(tmpUserId);
+      console.log(`User ID: ${tmpUserId}`);
+      if (localUserId.length === 0) {
+        console.log("set new id to local storage");
+        localStorage.setItem(CustomEvent.USER_ID, tmpUserId);
+      }
+    });
 
     // Handle connection errors
     eventSource.onerror = (error) => {
@@ -43,7 +62,7 @@ const SSEClient: React.FC<SSEClientProps> = ({ url, title = "Server-Sent Events"
     return () => {
       eventSource.close();
     };
-  }, [url]);
+  }, []);
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial" }}>
@@ -53,7 +72,8 @@ const SSEClient: React.FC<SSEClientProps> = ({ url, title = "Server-Sent Events"
           const { message, timestamp } = data || { message: "", timestamp: "" };
           return (
             <li key={index}>
-              <strong>Message:</strong> {message}, <strong>Time:</strong> {timestamp}
+              <strong>Message:</strong> {message}, <strong>Time:</strong>{" "}
+              {timestamp}
             </li>
           );
         })}

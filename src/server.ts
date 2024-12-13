@@ -7,7 +7,7 @@ import { setupSSE } from "./sse";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const corsOptions = {
+export const corsOptions = {
   origin: ["http://localhost:8080", /\.teamitgroup\.fi$/],
   optionsSuccessStatus: 200,
 };
@@ -48,7 +48,7 @@ app.post(
       const uploadPath: string = path.join(
         __dirname,
         "../uploads",
-        `upload-${Date.now()}.pdf`
+        `upload-${Date.now()}.pdf`,
       );
       fs.writeFileSync(uploadPath, pdfBuffer);
       res.status(200).send("File uploaded successfully.");
@@ -56,7 +56,7 @@ app.post(
       console.error("Error uploading file:", error);
       res.status(500).send("Internal Server Error.");
     }
-  }
+  },
 );
 setupSSE(app, corsOptions);
 export function startServer() {
