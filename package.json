@@ -1,5 +1,5 @@
 {
-  "name": "ai-tools",
+  "name": "ai-chat-upload-example",
   "version": "1.0.0",
   "description": "Small helpers for coding ai related things.",
   "main": "src/index.ts",
